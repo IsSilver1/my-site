@@ -32,20 +32,25 @@ button.main:hover{transform:scale(1.03);box-shadow:0 0 12px rgba(255,255,255,0.6
 <div class="container">
   <div class="card">
     <div class="header"><h1>سِـيـلـفـر 𝐒𝐋𝐕</h1></div>
+
     <label>بريد الدعم</label>
     <input id="email" placeholder="abuse@telegram.org">
     <label>الموضوع</label>
     <input id="subject">
     <label>كليشة البلاغ</label>
     <textarea id="body"></textarea>
+
     <button class="main" id="send">✓ إرسال البلاغ</button>
+
     <div class="actions">
       <button id="reuse">↺ استخدام آخر كليشة بلاغ</button>
       <button id="reset">تصفير عداد البلاغات</button>
     </div>
+
     <div class="counter">
       عدد البلاغات المرسلة: <b id="count">0</b>
     </div>
+
     <div class="footer">
       <span>سِـيـلـفـر 𝐒𝐋𝐕</span>
       <a href="https://t.me/IsSilver1" target="_blank">تواصل مع المطور</a>
@@ -64,38 +69,41 @@ document.getElementById("body").value = lastText;
 
 // زر إرسال البلاغ
 document.getElementById("send").onclick = function() {
-  let email = document.getElementById("email").value;
-  let subject = document.getElementById("subject").value;
-  let body = document.getElementById("body").value;
+    let email = document.getElementById("email").value;
+    let subject = document.getElementById("subject").value;
+    let body = document.getElementById("body").value;
 
-  if(!email){ alert("اكتب بريد الدعم"); return; }
+    if(!email){ alert("اكتب بريد الدعم"); return; }
 
-  let link = "mailto:" + email +
-             "?subject=" + encodeURIComponent(subject) +
-             "&body=" + encodeURIComponent(body);
+    // تحديث العداد أولاً وحفظه
+    count++;
+    document.getElementById("count").innerText = count;
+    lastText = body;
+    localStorage.setItem("count", count);
+    localStorage.setItem("lastText", lastText);
 
-  window.open(link); // يفتح البريد في نافذة جديدة بدل إعادة تحميل الصفحة
+    // فتح البريد بعد تحديث العداد
+    let link = "mailto:" + email +
+               "?subject=" + encodeURIComponent(subject) +
+               "&body=" + encodeURIComponent(body);
 
-  count++;
-  document.getElementById("count").innerText = count;
-  lastText = body;
-
-  localStorage.setItem("count", count);
-  localStorage.setItem("lastText", lastText);
+    setTimeout(()=> {
+        window.open(link);
+    }, 100); // يعطي فرصة لتحديث العداد قبل فتح البريد
 };
 
 // زر إعادة استخدام آخر كليشة
 document.getElementById("reuse").onclick = function() {
-  if(lastText){
-    document.getElementById("body").value = lastText;
-  }
+    if(lastText){
+        document.getElementById("body").value = lastText;
+    }
 };
 
 // زر تصفير العدادات
 document.getElementById("reset").onclick = function() {
-  count = 0;
-  document.getElementById("count").innerText = 0;
-  localStorage.setItem("count", count);
+    count = 0;
+    document.getElementById("count").innerText = 0;
+    localStorage.setItem("count", count);
 };
 </script>
 </body>
